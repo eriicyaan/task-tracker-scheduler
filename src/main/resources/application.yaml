@@ -1,0 +1,2 @@
+internal:
+  service.secret: ${INTERNAL_SERVICE_SECRET}
