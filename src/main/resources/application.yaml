@@ -1,2 +1,11 @@
+spring:
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092,localhost:9094
+      acks: all
+
+      properties:
+        enable.idempotence: true
+
 internal:
   service.secret: ${INTERNAL_SERVICE_SECRET}

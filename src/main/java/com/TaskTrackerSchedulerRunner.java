@@ -2,11 +2,13 @@ package com;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 
 @SpringBootApplication
-public class TaskTrackerSchedularRunner {
+@EnableScheduling
+public class TaskTrackerSchedulerRunner {
     public static void main(String[] args) {
-        SpringApplication.run(TaskTrackerSchedularRunner.class, args);
+        SpringApplication.run(TaskTrackerSchedulerRunner.class, args);
     }
 }
