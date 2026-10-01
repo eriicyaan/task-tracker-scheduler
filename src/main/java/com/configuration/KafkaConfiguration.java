@@ -12,6 +12,7 @@ import org.apache.kafka.common.serialization.UUIDSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.*;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
@@ -20,6 +21,7 @@ import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
 import org.springframework.kafka.support.serializer.JacksonJsonDeserializer;
 import org.springframework.kafka.support.serializer.JacksonJsonSerializer;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -41,7 +43,10 @@ public class KafkaConfiguration {
     public ReplyingKafkaTemplate<UUID, SchedulerSummarizationRequest, SchedulerSummarizationResponse> replyingKafkaTemplate(
             ProducerFactory<UUID, SchedulerSummarizationRequest> producerFactory,
             ConcurrentMessageListenerContainer<UUID, SchedulerSummarizationResponse> repliesContainer) {
-        return new ReplyingKafkaTemplate<>(producerFactory, repliesContainer);
+        var replyingKafkaTemplate = new ReplyingKafkaTemplate<>(producerFactory, repliesContainer);
+
+        replyingKafkaTemplate.setDefaultReplyTimeout(Duration.ofMinutes(5));
+        return replyingKafkaTemplate;
     }
 
 
@@ -52,6 +57,7 @@ public class KafkaConfiguration {
         ContainerProperties containerProperties =
                 new ContainerProperties("schedular-summarization-response-topic");
 
+
         return new ConcurrentMessageListenerContainer<>(
                 consumerFactory,
                 containerProperties
@@ -61,20 +67,16 @@ public class KafkaConfiguration {
     @Bean
     public NewTopic schedularSummarizationRequestTopic() {
         return TopicBuilder
-                .name("schedular-summarization-request-topic")
-                .replicas(3)
+                .name("scheduler-summarization-request-topic")
                 .partitions(3)
-                .config("min.insync.replicas", "2")
                 .build();
     }
 
     @Bean
     public NewTopic schedularSummarizationResponseTopic() {
         return TopicBuilder
-                .name("schedular-summarization-response-topic")
-                .replicas(3)
+                .name("scheduler-summarization-response-topic")
                 .partitions(3)
-                .config("min.insync.replicas", "2")
                 .build();
     }
 
@@ -102,7 +104,8 @@ public class KafkaConfiguration {
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("spring.kafka.consumer.bootstrap-servers"));
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, UUIDDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JacksonJsonDeserializer.class);
-        config.put(JacksonJsonDeserializer.TRUSTED_PACKAGES, "com.kafka.rpc.summarization");
+        config.put(ConsumerConfig.GROUP_ID_CONFIG, environment.getProperty("spring.kafka.consumer.group-id"));
+        config.put(JacksonJsonDeserializer.TRUSTED_PACKAGES, environment.getProperty("spring.kafka.consumer.trusted-packages"));
 
         return config;
     }

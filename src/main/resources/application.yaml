@@ -1,11 +1,18 @@
 spring:
   kafka:
     producer:
-      bootstrap-servers: localhost:9092,localhost:9094
+      bootstrap-servers: localhost:9092
       acks: all
 
       properties:
         enable.idempotence: true
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: scheduler-group
+      trusted-packages: com.kafka.rpc.summarization
 
 internal:
   service.secret: ${INTERNAL_SERVICE_SECRET}
+
+server:
+  port: 8082
