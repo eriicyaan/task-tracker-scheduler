@@ -66,7 +66,7 @@ public class SchedulerService {
 
     private List<UserResponse> getUsers() {
         RestClient rest = RestClient.builder()
-                .baseUrl("http://task_tracker_backend:8080/api/internal/backend/users")
+                .baseUrl("http://task-tracker-backend:8080/api/internal/backend/users")
                 .defaultHeader("X-Internal-Service-Key", secret)
                 .build();
 

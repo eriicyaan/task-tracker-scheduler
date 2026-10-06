@@ -1,15 +1,15 @@
 spring:
   kafka:
     producer:
-      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVER}:9092
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVER}
       acks: all
 
       properties:
         enable.idempotence: true
     consumer:
-      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVER}:9092
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVER}
       group-id: scheduler-group
-      trusted-packages: com.kafka.rpc.summarization
+      trusted-packages: com.tasktracker.kafka.rpc.summarization
 
 internal:
   service.secret: ${INTERNAL_SERVICE_SECRET}
