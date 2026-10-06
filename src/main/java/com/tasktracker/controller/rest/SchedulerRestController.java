@@ -1,11 +1,11 @@
-package com.controller.rest;
+package com.tasktracker.controller.rest;
 
 
-import com.dto.response.UserResponse;
-import com.kafka.events.EmailSendingEvent;
-import com.kafka.events.EventType;
-import com.kafka.rpc.summarization.SchedulerSummarizationRequest;
-import com.kafka.rpc.summarization.SchedulerSummarizationResponse;
+import com.tasktracker.dto.response.UserResponse;
+import com.tasktracker.kafka.events.EmailSendingEvent;
+import com.tasktracker.kafka.events.EventType;
+import com.tasktracker.kafka.rpc.summarization.SchedulerSummarizationRequest;
+import com.tasktracker.kafka.rpc.summarization.SchedulerSummarizationResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -67,7 +67,7 @@ public class SchedulerRestController {
 
     private List<UserResponse> getUsers() {
         RestClient rest = RestClient.builder()
-                .baseUrl("http://localhost:8080/api/internal/backend/users")
+                .baseUrl("http://task_tracker_backend/api/internal/backend/users")
                 .defaultHeader("X-Internal-Service-Key", secret)
                 .build();
 
