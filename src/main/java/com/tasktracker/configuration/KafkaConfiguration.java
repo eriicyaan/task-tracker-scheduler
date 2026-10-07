@@ -54,7 +54,7 @@ public class KafkaConfiguration {
     public ConcurrentMessageListenerContainer<UUID, SchedulerSummarizationResponse> repliesContainer(
             ConsumerFactory<UUID, SchedulerSummarizationResponse> consumerFactory) {
         ContainerProperties containerProperties =
-                new ContainerProperties("schedular-summarization-response-topic");
+                new ContainerProperties("scheduler-summarization-response-topic");
 
 
         return new ConcurrentMessageListenerContainer<>(
@@ -64,7 +64,7 @@ public class KafkaConfiguration {
     }
 
     @Bean
-    public NewTopic schedularSummarizationRequestTopic() {
+    public NewTopic schedulerSummarizationRequestTopic() {
         return TopicBuilder
                 .name("scheduler-summarization-request-topic")
                 .partitions(3)
@@ -72,7 +72,7 @@ public class KafkaConfiguration {
     }
 
     @Bean
-    public NewTopic schedularSummarizationResponseTopic() {
+    public NewTopic schedulerSummarizationResponseTopic() {
         return TopicBuilder
                 .name("scheduler-summarization-response-topic")
                 .partitions(3)

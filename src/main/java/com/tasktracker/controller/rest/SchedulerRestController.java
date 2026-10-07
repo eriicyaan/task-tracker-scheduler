@@ -1,22 +1,24 @@
 package com.tasktracker.controller.rest;
 
 
-import com.tasktracker.dto.response.UserResponse;
 import com.tasktracker.kafka.events.EmailSendingEvent;
 import com.tasktracker.kafka.events.EventType;
 import com.tasktracker.kafka.rpc.summarization.SchedulerSummarizationRequest;
 import com.tasktracker.kafka.rpc.summarization.SchedulerSummarizationResponse;
+import com.tasktracker.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpStatus;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
 import org.springframework.kafka.requestreply.RequestReplyFuture;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
 
@@ -42,7 +44,8 @@ public class SchedulerRestController {
 
 
     @GetMapping
-    public void doSchedular() throws ExecutionException, InterruptedException {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void doScheduler() throws ExecutionException, InterruptedException {
         List<UserResponse> users = getUsers();
         log.info("RECEIVE USERS: {}", users);
 
@@ -85,7 +88,7 @@ public class SchedulerRestController {
 
         ProducerRecord<UUID, SchedulerSummarizationRequest> record =
                 new ProducerRecord<>(
-                        "schedular-summarization-request-topic",
+                        "scheduler-summarization-request-topic",
                         UUID.randomUUID(),
                         request
                 );

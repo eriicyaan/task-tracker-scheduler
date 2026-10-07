@@ -1,11 +1,11 @@
 package com.tasktracker.service;
 
 
-import com.tasktracker.dto.response.UserResponse;
 import com.tasktracker.kafka.events.EmailSendingEvent;
 import com.tasktracker.kafka.events.EventType;
 import com.tasktracker.kafka.rpc.summarization.SchedulerSummarizationRequest;
 import com.tasktracker.kafka.rpc.summarization.SchedulerSummarizationResponse;
+import com.tasktracker.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -41,7 +41,7 @@ public class SchedulerService {
 
 
     @Scheduled(cron = "0 0 0 * * *")
-    public void doSchedular() throws ExecutionException, InterruptedException {
+    public void doScheduler() throws ExecutionException, InterruptedException {
         List<UserResponse> users = getUsers();
         log.info("RECEIVE USERS: {}", users);
 
@@ -84,7 +84,7 @@ public class SchedulerService {
 
         ProducerRecord<UUID, SchedulerSummarizationRequest> record =
                 new ProducerRecord<>(
-                        "schedular-summarization-request-topic",
+                        "scheduler-summarization-request-topic",
                         UUID.randomUUID(),
                         request
                 );
